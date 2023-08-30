@@ -32,29 +32,31 @@ const getters = {
 };
 
 const actions = {
-    add(partialTodo: TodoAdd) {
-        const todo: Todo = {
-            id: uuid(),
-            done: false,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            ...partialTodo,
-        }
-        this.items.push(todo);
-    },
-    remove(id: string) {
-        this.items = this.items.filter((item: Todo) => item.id !== id)
-    },
-    update(id: string, updatedTodo: TodoUpdate) {
-        const index = this.items.findIndex((item: Todo) => item.id === id)
-        if (index !== -1) {
-            this.items[index] = {...this.items[index], ...updatedTodo, updatedAt: new Date()}
-        }
-    }
+
 };
 
 export const useTodoStore = defineStore('todoStore', {
     state,
     getters,
-    actions
+    actions: {
+        add(partialTodo: TodoAdd) {
+            const todo: Todo = {
+                id: uuid(),
+                done: false,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                ...partialTodo,
+            }
+            this.items.push(todo);
+        },
+        remove(id: string) {
+            this.items = this.items.filter((item: Todo) => item.id !== id)
+        },
+        update(id: string, updatedTodo: TodoUpdate) {
+            const index = this.items.findIndex((item: Todo) => item.id === id)
+            if (index !== -1) {
+                this.items[index] = {...this.items[index], ...updatedTodo, updatedAt: new Date()}
+            }
+        }
+    }
 })
