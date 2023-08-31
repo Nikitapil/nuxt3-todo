@@ -22,7 +22,9 @@ const saveNewTodo = () => {
 
 watch(error, (value: boolean) => {
   if (value) {
-
+    setTimeout(() => {
+      error.value = false
+    }, 3000)
   }
 })
 </script>
@@ -34,7 +36,7 @@ watch(error, (value: boolean) => {
     </section>
     <section class="md:w-8/12 md:mx-auto lg:w-6/12 py-4 rounded-lg">
       <todo-input v-model="newTodo" @save="saveNewTodo" :error="error"></todo-input>
-<!--      <todo-list/>-->
+      <todo-list :items="todoStore.getOrderedTodos" />
     </section>
   </main>
 </template>

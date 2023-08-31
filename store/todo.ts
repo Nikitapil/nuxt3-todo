@@ -28,11 +28,7 @@ const state = (): TodoState => ({
 
 const getters = {
     getById: (state: TodoState) => (id: string) => state.items.find(item => item.id === id),
-    getOrderedTodos: (state: TodoState) => [...state.items].sort((a: Todo, b: Todo) => a.createdAt.getTime() - b.createdAt.getTime())
-};
-
-const actions = {
-
+    getOrderedTodos: (state: TodoState) => [...state.items].sort((a: Todo, b: Todo) =>  b.createdAt.getTime() - a.createdAt.getTime())
 };
 
 export const useTodoStore = defineStore('todoStore', {

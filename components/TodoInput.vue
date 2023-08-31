@@ -20,8 +20,15 @@ const localState = computed({
 </script>
 
 <template>
-  <div class="todoInput">
-    <input v-model="localState" type="text" @keypress.enter="emit('save')">
+  <div class="w-18/12 sm:w-8/12 max-w-lg mx-auto h-24 bg-white rounded-md shadow-sm py-5 px-10 flex items-center justify-between mb-5 border-red-300">
+    <input
+        v-model="localState"
+        type="text"
+        placeholder="Create a todo"
+        class="border py-2 px-3"
+        :class="{'border-red-300': error, 'border-gray-300': !error}"
+        @keypress.enter="emit('save')"
+    >
     <button @click="$emit('save')">Save</button>
   </div>
 </template>
