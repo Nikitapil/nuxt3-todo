@@ -57,14 +57,14 @@ describe('todo tests', () => {
 
             expect(orderedTodos).toStrictEqual([
                 {
-                    createdAt: new Date(2019, 2, 14)
+                    createdAt: new Date(2021, 2, 14)
                 },
                 {
                     createdAt: new Date(2020, 2, 14)
                 },
                 {
-                    createdAt: new Date(2021, 2, 14)
-                },
+                    createdAt: new Date(2019, 2, 14)
+                }
             ])
 
             expect(store.items[0]).toEqual({

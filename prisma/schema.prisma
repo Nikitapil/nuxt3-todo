@@ -11,5 +11,20 @@ datasource db {
 }
 
 model Todo {
-  id String @id
+  id        String   @id @default(uuid())
+  ownerid   String
+  label     String   @db.VarChar(255)
+  done      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  User      User     @relation(fields: [ownerid], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  todos     Todo[]
 }
