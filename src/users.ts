@@ -22,13 +22,13 @@ export interface UsersToken {
 }
 
 const userAddOptionsSchema = Joi.object({
-    email: Joi.string().email().required(),
+    email: Joi.string().email({ tlds: { allow: false } }).required(),
     password: Joi.string().min(8).required(),
     passwordConfirm: Joi.string().valid(Joi.ref('password')).required(),
 }).required()
 
 const userLoginOptionsSchema = Joi.object({
-    email: Joi.string().email().required(),
+    email: Joi.string().email({ tlds: { allow: false } }).required(),
     password: Joi.string().min(8).required(),
 }).required()
 
@@ -69,8 +69,16 @@ export class Users {
         }
     }
 
-    async add(options: UsersAddOption): Promise<User> {
+    async add(options: UsersAddOption): Promise<Omit<User, 'password'>> {
         const params = await userAddOptionsSchema.validateAsync(options) as UsersAddOption
+
+        const user = await this.UserModel.findUnique({
+            where: { email: params.email }
+        })
+
+        if (user) {
+            throw new Error('User Already exists')
+        }
 
         const hashPassword = await Users.hashPassword(params.password)
 
@@ -78,11 +86,17 @@ export class Users {
             data: {
                 email: params.email,
                 password: hashPassword
+            },
+            select: {
+                email: true,
+                id: true,
+                createdAt: true,
+                updatedAt: true
             }
         })
     }
 
-    async login(options: UsersLoginOption): Promise<User | undefined> {
+    async login(options: UsersLoginOption): Promise<UsersToken | undefined> {
         const params = await userLoginOptionsSchema.validateAsync(options) as UsersLoginOption
 
         const user = await this.UserModel.findUnique({
@@ -92,13 +106,14 @@ export class Users {
         })
 
         if (!user) {
-            return
+            throw new Error('Invalid email or password')
         }
 
         if (!(await Users.isValidPassword(params.password, user.password))) {
-            return
+            throw new Error('Invalid email or password')
         }
 
-        return user
+
+        return Users.createToken(user)
      }
 }

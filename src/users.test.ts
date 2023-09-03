@@ -1,4 +1,4 @@
-import {vi} from 'vitest'
+import {beforeAll, vi} from 'vitest'
 import {TOKEN_EXPIRY_DAYS, Users} from './users'
 import {PrismaClient} from '@prisma/client'
 import JWT from 'jsonwebtoken'
@@ -83,6 +83,117 @@ describe('users', () => {
         test('throws if options are invalid', async () => {
             // @ts-ignore
             await expect(new Users(client.user).add()).rejects.toThrow('"value" is required')
+        })
+
+        test('throws if options are invalid', async () => {
+            // @ts-ignore
+            await expect(new Users(client.user).add(null)).rejects.toThrow('"value" must be of type object')
+        })
+
+        test('throws if options are invalid', async () => {
+            // @ts-ignore
+            await expect(new Users(client.user).add({})).rejects.toThrow('"email" is required')
+        })
+
+        test('throws if options are invalid', async () => {
+            // @ts-ignore
+            await expect(new Users(client.user).add({email: null})).rejects.toThrow('"email" must be a string')
+        })
+
+        test('throws if options are invalid', async () => {
+            // @ts-ignore
+            await expect(new Users(client.user).add({email: ''})).rejects.toThrow('"email" is not allowed to be empty')
+        })
+
+        test('returns a user', async () => {
+            const userController = new Users(client.user)
+
+            const user = await userController.add({
+                email: 'test@test.test',
+                password: '123456789',
+                passwordConfirm: '123456789'
+            })
+
+            expect(user).toStrictEqual({
+                id: expect.any(String),
+                email: 'test@test.test',
+                createdAt: expect.any(Date),
+                updatedAt: expect.any(Date)
+            })
+
+            await client.user.delete({
+                where: { id: user.id }
+            })
+        })
+
+        test('throws if email already exists', async () => {
+            const userController = new Users(client.user)
+
+            const userMock = {
+                email: 'test@test.test',
+                password: '123456789',
+                passwordConfirm: '123456789'
+            }
+
+            const user = await userController.add(userMock)
+
+            // @ts-ignore
+            await expect(userController.add(userMock)).rejects.toThrow()
+
+            await client.user.delete({
+                where: { id: user.id }
+            })
+        })
+    })
+
+    describe('users - login', () => {
+        let user;
+
+        beforeAll(async () => {
+            user = await new Users(client.user).add({
+                email: 'test@test.test',
+                password: '123456789',
+                passwordConfirm: '123456789'
+            })
+        })
+
+        afterAll(async () => {
+            await client.user.delete({
+                where: {email: 'test@test.test'}
+            })
+        })
+
+        test("throws if options invalid", async () => {
+            // @ts-ignore
+            await expect(new Users(client.user).login({})).rejects.toThrow()
+        })
+
+        test("returns undefined if user does not exist", async () => {
+            const result = await new Users(client.user).login({
+                email: 'wrong@test.test',
+                password: '12345678'
+            })
+            expect(result).toBeUndefined()
+        })
+
+
+        test('returns undefined if password is incorrect', async () => {
+            const result = await new Users(client.user).login({
+                email: 'test@test.test',
+                password: '12345679'
+            })
+            expect(result).toBeUndefined()
+        })
+
+        test('returns token', async () => {
+            const result = await new Users(client.user).login({
+                email: 'test@test.test',
+                password: '123456789'
+            })
+            expect(result).toStrictEqual({
+                token: expect.any(String),
+                expiryInDays: TOKEN_EXPIRY_DAYS
+            })
         })
     })
 });
