@@ -4,13 +4,18 @@ export default defineNuxtConfig({
   postcss: {
     plugins: {
       tailwindcss: {},
-      autoprefixer: {},
-    },
+      autoprefixer: {}
+    }
   },
-  modules: ['@pinia/nuxt'],
+  app: {
+    head: {
+      title: 'Todoer'
+    }
+  },
+  modules: ['@pinia/nuxt', '@vueuse/nuxt'],
   nitro: {
     externals: {
-      inline: ["uuid"]
+      inline: ['uuid']
     }
   }
-})
+});

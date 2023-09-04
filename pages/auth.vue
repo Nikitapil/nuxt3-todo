@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import PageHeading from '~/components/ui/PageHeading.vue';
+import AppInput from '~/components/ui/AppInput.vue';
+import AppButton from '~/components/ui/AppButton.vue';
+
 definePageMeta({
   layout: 'empty'
 });
@@ -62,51 +66,54 @@ const authorize = () => {
   }
   register();
 };
+
+const pageTitle = computed(() =>
+  loginMode.value ? 'Login to your account' : 'Create an account'
+);
+
+const authLinkText = computed(() => (loginMode.value ? 'Register' : 'Login'));
 </script>
 
 <template>
   <section class="text-center py-10">
-    <h1 class="text-5xl font-bold text-gray-700 mb-4">
-      {{ loginMode ? 'Login to your account' : 'Create an account' }}
-    </h1>
+    <PageHeading :text="pageTitle" />
     <form
       class="flex flex-col max-w-lg mx-auto"
       @submit.prevent
     >
-      <input
+      <AppInput
         id="email"
         v-model="email"
-        class="px-2 py-3 mt-3 border-1 border-lime-200 rounded-md"
-        placeholder="Email Address"
-        type="email"
+        class="mb-3"
         name="email"
-      />
-      <input
-        id="password"
-        v-model="password"
-        class="px-2 py-3 mt-3 border-1 border-lime-200"
-        placeholder="Password"
-        type="password"
-        name="password"
+        placeholder="Email Adress"
+        type="email"
       />
 
-      <input
+      <AppInput
+        id="password"
+        v-model="password"
+        name="password"
+        placeholder="Password"
+        type="password"
+      />
+
+      <AppInput
         v-if="!loginMode"
         id="password-confirm"
         v-model="passwordConfirm"
-        class="px-2 py-3 mt-3 border-1 border-lime-200"
+        class="mt-3"
+        name="password-confirm"
         placeholder="Re-enter your password"
         type="password"
-        name="password-confirm"
       />
 
-      <button
-        class="p-5 bg-blue-500 text-white rounded-sm mt-5 disabled:bg-gray-400 disabled:text-white"
+      <AppButton
+        class="mt-3"
         :disabled="loading"
+        text="Authorize"
         @click="authorize"
-      >
-        Authorize
-      </button>
+      />
 
       <p
         v-if="error"
@@ -119,14 +126,9 @@ const authorize = () => {
         @click="loginMode = !loginMode"
       >
         Or
-        {{ loginMode ? 'Register' : 'Login' }}
+        {{ authLinkText }}
         instead
       </a>
     </form>
   </section>
 </template>
-<style>
-main {
-  color: #060f2f;
-}
-</style>
