@@ -23,7 +23,9 @@ const parsedDate = computed(() =>
 </script>
 
 <template>
-  <list-item-container>
+  <div
+    class="w-10/12 sm:w-8/12 max-w-lg mx-auto h-24 bg-white rounded-md shadow-md p-5 px-10 flex items-center justify-between mb-5"
+  >
     <div class="max-w-10/12 overflow-hidden whitespace-nowrap text-ellipsis">
       <h1
         :class="{
@@ -54,5 +56,5 @@ const parsedDate = computed(() =>
         @click="deleteTodo"
       />
     </section>
-  </list-item-container>
+  </div>
 </template>

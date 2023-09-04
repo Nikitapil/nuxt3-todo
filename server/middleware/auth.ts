@@ -12,6 +12,5 @@ export default defineEventHandler(async (event) => {
   if (!verifiedUser) {
     return;
   }
-
   event.context.user = verifiedUser;
 });
