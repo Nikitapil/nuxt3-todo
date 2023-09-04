@@ -37,20 +37,18 @@ const logout = () => {
 </script>
 
 <template>
-  <main class="pt-18 min-h-screen bg-gray-100">
-    <nav class="flex justify-end">
-      <a @click="logout">Logout</a>
-    </nav>
-    <section class="text-center py-10">
-      <h1 class="text-5xl font-bold text-gray-700">What are we doing today?</h1>
-    </section>
-    <section class="md:w-8/12 md:mx-auto lg:w-6/12 py-4 rounded-lg">
-      <todo-input
-        v-model="newTodo"
-        :error="error"
-        @save="saveNewTodo"
-      ></todo-input>
-      <todo-list :items="todoStore.getOrderedTodos" />
-    </section>
-  </main>
+  <nav class="flex justify-end">
+    <a @click="logout">Logout</a>
+  </nav>
+  <section class="text-center py-10">
+    <h1 class="text-5xl font-bold text-gray-700">What are we doing today?</h1>
+  </section>
+  <section class="md:w-8/12 md:mx-auto lg:w-6/12 py-4 rounded-lg">
+    <todo-input
+      v-model="newTodo"
+      :error="error"
+      @save="saveNewTodo"
+    ></todo-input>
+    <todo-list :items="todoStore.getOrderedTodos" />
+  </section>
 </template>
