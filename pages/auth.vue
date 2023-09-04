@@ -2,6 +2,7 @@
 import PageHeading from '~/components/ui/PageHeading.vue';
 import AppInput from '~/components/ui/AppInput.vue';
 import AppButton from '~/components/ui/AppButton.vue';
+import { EApiRoutes } from '~/server/api/constants';
 
 definePageMeta({
   layout: 'empty'
@@ -18,9 +19,8 @@ const error = ref<string | null>(null);
 const loginMode = ref(true);
 
 const login = async () => {
-  const url = '/api/users/login';
-
-  const { error: err } = await $fetch(url, {
+  error.value = null;
+  const { error: err } = await $fetch(EApiRoutes.LOGIN, {
     method: 'POST',
     body: {
       email: email.value,
@@ -38,9 +38,7 @@ const login = async () => {
 
 const register = async () => {
   error.value = null;
-  const url = '/api/users/create';
-
-  const { error: err } = await $fetch(url, {
+  const { error: err } = await $fetch(EApiRoutes.CREATE_USER, {
     method: 'POST',
     body: {
       email: email.value,

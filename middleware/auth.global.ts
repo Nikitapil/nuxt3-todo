@@ -1,13 +1,13 @@
-const ALLOWED = [/^\/auth\/?$/];
+const AUTH_ROUTE = '/auth';
 
 export default defineNuxtRouteMiddleware(async (to) => {
-  if (ALLOWED.some((route) => route.test(to.fullPath))) {
-    return;
-  }
-
   const cookie = useCookie('nuxt3-todo-token');
 
   if (!cookie || !cookie.value) {
-    return navigateTo('/auth');
+    if (to.fullPath !== AUTH_ROUTE) {
+      return navigateTo('/auth');
+    }
+  } else if (to.fullPath === AUTH_ROUTE) {
+    return navigateTo('/');
   }
 });

@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import Joi from 'joi';
 import bcrypt from 'bcrypt';
 import JWT from 'jsonwebtoken';
