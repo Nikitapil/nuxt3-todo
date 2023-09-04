@@ -1,20 +1,19 @@
-import {tryWrap} from "~/helpers/tryWrap";
-import {users} from "~/src/controllers";
+import { tryWrap } from '~/helpers/tryWrap';
+import { users } from '~/src/controllers';
 
 export default defineEventHandler(async (event) => {
+  // Example of redirect
+  // if (event.context.user === undefined) {
+  //     return sendRedirect(event, '/auth')
+  // }
 
-    // Example of redirect
-    // if (event.context.user === undefined) {
-    //     return sendRedirect(event, '/auth')
-    // }
+  const { result, error } = await tryWrap(async () => {
+    const { email, password, passwordConfirm } = await readBody(event);
 
-    const {result, error} = await tryWrap(async () => {
-        const {email, password, passwordConfirm} = await readBody(event)
+    const user = await users.add({ email, password, passwordConfirm });
 
-        const user = await users.add({ email, password, passwordConfirm})
+    return user;
+  });
 
-        return user
-    })
-
-    return {result, error: error?.message || null}
-})
+  return { result, error: (error?.message as string) || null };
+});

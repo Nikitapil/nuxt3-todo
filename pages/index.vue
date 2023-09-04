@@ -1,14 +1,13 @@
 <script setup lang="ts">
-
-import {useTodoStore} from "~/store/todo";
+import { useTodoStore } from '~/store/todo';
 import cookie from 'js-cookie';
 
-const router = useRouter()
+const router = useRouter();
 
-const todoStore = useTodoStore()
+const todoStore = useTodoStore();
 
-const newTodo = ref('')
-const error = ref(false)
+const newTodo = ref('');
+const error = ref(false);
 
 const saveNewTodo = () => {
   if (!newTodo.value.length) {
@@ -16,25 +15,25 @@ const saveNewTodo = () => {
     return;
   }
 
-  todoStore.add({ title: newTodo.value })
+  todoStore.add({ title: newTodo.value });
 
   newTodo.value = '';
 
-  console.log(todoStore.items)
-}
+  console.log(todoStore.items);
+};
 
 watch(error, (value: boolean) => {
   if (value) {
     setTimeout(() => {
-      error.value = false
-    }, 3000)
+      error.value = false;
+    }, 3000);
   }
-})
+});
 
 const logout = () => {
-  cookie.remove('nuxt3-todo-token')
-  router.push('/auth')
-}
+  cookie.remove('nuxt3-todo-token');
+  router.push('/auth');
+};
 </script>
 
 <template>
@@ -46,7 +45,11 @@ const logout = () => {
       <h1 class="text-5xl font-bold text-gray-700">What are we doing today?</h1>
     </section>
     <section class="md:w-8/12 md:mx-auto lg:w-6/12 py-4 rounded-lg">
-      <todo-input v-model="newTodo" @save="saveNewTodo" :error="error"></todo-input>
+      <todo-input
+        v-model="newTodo"
+        :error="error"
+        @save="saveNewTodo"
+      ></todo-input>
       <todo-list :items="todoStore.getOrderedTodos" />
     </section>
   </main>

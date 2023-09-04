@@ -1,17 +1,17 @@
-import {Users} from "~/src/users";
-import {getCookie} from 'h3'
+import { Users } from '~/src/users';
+import { getCookie } from 'h3';
 
 export default defineEventHandler(async (event) => {
-    const cookie = getCookie(event, 'nuxt3-todo-token')
-    if(!cookie) {
-        return
-    }
+  const cookie = getCookie(event, 'nuxt3-todo-token');
+  if (!cookie) {
+    return;
+  }
 
-    const verifiedUser = Users.getUserInfoFromToken(cookie)
+  const verifiedUser = Users.getUserInfoFromToken(cookie);
 
-    if (!verifiedUser) {
-        return
-    }
+  if (!verifiedUser) {
+    return;
+  }
 
-    event.context.user = verifiedUser
-})
+  event.context.user = verifiedUser;
+});
