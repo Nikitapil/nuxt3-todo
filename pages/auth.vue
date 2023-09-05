@@ -84,7 +84,7 @@ const authLinkText = computed(() => (loginMode.value ? 'Register' : 'Login'));
         v-model="email"
         class="mb-3"
         name="email"
-        placeholder="Email Adress"
+        placeholder="Email Address"
         type="email"
       />
 
