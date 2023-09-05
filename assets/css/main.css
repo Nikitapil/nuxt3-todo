@@ -9,3 +9,7 @@
 .overflow-anywhere {
     overflow-wrap: anywhere;
 }
+
+.pad-0 {
+    padding: 0 !important;
+}

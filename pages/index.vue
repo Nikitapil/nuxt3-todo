@@ -43,7 +43,7 @@ const logout = () => {
   <section class="text-center py-10">
     <h1 class="text-5xl font-bold text-gray-700">What are we doing today?</h1>
   </section>
-  <section class="md:w-8/12 md:mx-auto lg:w-6/12 py-4 rounded-lg">
+  <section class="py-4 rounded-lg">
     <todo-input
       v-model="newTodo"
       :error="error"

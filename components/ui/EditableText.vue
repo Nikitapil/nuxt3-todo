@@ -47,7 +47,7 @@ defineExpose({ close });
     />
     <AppButton
       v-if="!isEditMode"
-      class="p-0"
+      class="pad-0"
       appearance="transparent"
       @click="onOpenInput"
     >
@@ -57,7 +57,7 @@ defineExpose({ close });
     </AppButton>
     <AppButton
       v-else
-      class="p-0"
+      class="pad-0"
       appearance="transparent"
       @click="$emit('save', textToEdit)"
     >

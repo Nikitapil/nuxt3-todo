@@ -6,6 +6,7 @@ import {
 import { useTodoStore } from '~~/store/todo';
 import { Todo } from '~~/store/todo';
 import EditableText from '~/components/ui/EditableText.vue';
+import AppButton from '~/components/ui/AppButton.vue';
 
 const props = defineProps<{
   todo: Todo;
@@ -14,6 +15,7 @@ const props = defineProps<{
 const textRef = ref<InstanceType<typeof EditableText>>(null);
 
 const todoStore = useTodoStore();
+
 const deleteTodo = () => todoStore.remove(props.todo.id);
 
 const updateTodoDone = () => {
@@ -32,6 +34,10 @@ const updateTodoTitle = (newTitle: string) => {
 const parsedDate = computed(() =>
   new Intl.DateTimeFormat().format(new Date(props.todo.createdAt))
 );
+
+const checkIconClass = computed(() =>
+  props.todo.done ? 'text-green-400' : 'text-gray-400'
+);
 </script>
 
 <template>
@@ -49,7 +55,7 @@ const parsedDate = computed(() =>
         >
           <h1
             :class="{ 'line-through': todo.done }"
-            class="text-2xl text-gray-700 font-light uppercase overflow-anywhere"
+            class="text-2xl text-gray-700 font-light overflow-anywhere"
             :title="todo.title"
           >
             {{ todo.title }}
@@ -63,18 +69,25 @@ const parsedDate = computed(() =>
       </p>
     </div>
     <section class="flex items-center">
-      <check-circle-icon
-        class="w-10 h-10 transition-all duration-200 hover:text-green-400 mr-3 cursor-pointer"
-        :class="{
-          'text-green-400': todo.done,
-          'text-gray-400': !todo.done
-        }"
-        @click="updateTodoDone()"
-      />
-      <XCircleIcon
-        class="w-10 h-10 transition-all duration-200 text-red-400 cursor-pointer hover:text-red-600"
+      <AppButton
+        class="pad-0 mr-2"
+        appearance="transparent"
+        @click="updateTodoDone"
+      >
+        <check-circle-icon
+          class="w-10 h-10 transition-all duration-200 hover:text-green-400 cursor-pointer"
+          :class="checkIconClass"
+        />
+      </AppButton>
+      <AppButton
+        class="pad-0"
+        appearance="transparent"
         @click="deleteTodo"
-      />
+      >
+        <XCircleIcon
+          class="w-10 h-10 transition-all duration-200 text-red-400 cursor-pointer hover:text-red-600"
+        />
+      </AppButton>
     </section>
   </div>
 </template>
