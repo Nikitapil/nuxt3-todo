@@ -18,7 +18,7 @@ const todo = useVModel(props, 'modelValue', emit);
 
 <template>
   <div
-    class="w-18/12 sm:w-8/12 max-w-lg mx-auto h-24 bg-white rounded-md shadow-sm py-5 px-10 flex items-center justify-between mb-5 border-red-300"
+    class="w-full mx-auto h-24 bg-white rounded-md shadow-sm py-5 px-10 flex items-center justify-between mb-5 border-red-300"
   >
     <AppInput
       id="new-todo"

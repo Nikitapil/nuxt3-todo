@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 
     setCookie(event, 'nuxt3-todo-token', credentials?.token || '', {
       expires: new Date(
-        Date.now() + (credentials?.expiryInDays || 0) * 24 * 60 * 60
+        Date.now() + (credentials?.expiryInDays || 0) * 24 * 60 * 60 * 1000
       )
     });
 
