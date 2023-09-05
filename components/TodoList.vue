@@ -8,7 +8,7 @@ defineProps<{
 
 <template>
   <section v-if="items.length">
-    <todo-item
+    <TodoItem
       v-for="item in items"
       :key="item.id"
       :todo="item"

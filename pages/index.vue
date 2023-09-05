@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useTodoStore } from '~/store/todo';
+import PageHeading from '~/components/ui/PageHeading.vue';
 
 const todoStore = useTodoStore();
 
@@ -15,8 +16,6 @@ const saveNewTodo = () => {
   todoStore.add({ title: newTodo.value });
 
   newTodo.value = '';
-
-  console.log(todoStore.items);
 };
 
 watch(error, (value: boolean) => {
@@ -29,15 +28,15 @@ watch(error, (value: boolean) => {
 </script>
 
 <template>
-  <section class="text-center py-10">
-    <h1 class="text-5xl font-bold text-gray-700">What are we doing today?</h1>
+  <section class="text-center pt-10">
+    <PageHeading text="What are we doing today?" />
   </section>
   <section class="py-4 rounded-lg">
-    <todo-input
+    <TodoInput
       v-model="newTodo"
       :error="error"
       @save="saveNewTodo"
-    ></todo-input>
-    <todo-list :items="todoStore.getOrderedTodos" />
+    ></TodoInput>
+    <TodoList :items="todoStore.getOrderedTodos" />
   </section>
 </template>
