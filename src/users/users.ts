@@ -1,25 +1,14 @@
 import { Prisma, User } from '@prisma/client';
-import Joi from 'joi';
 import bcrypt from 'bcrypt';
 import JWT from 'jsonwebtoken';
+import {
+  UsersAddOption,
+  UsersLoginOption,
+  UsersToken
+} from '~/src/users/types';
+import Joi from 'joi';
 
 export const TOKEN_EXPIRY_DAYS = 7;
-
-export interface UsersAddOption {
-  email: string;
-  password: string;
-  passwordConfirm: string;
-}
-
-export interface UsersLoginOption {
-  email: string;
-  password: string;
-}
-
-export interface UsersToken {
-  token: string;
-  expiryInDays: number;
-}
 
 const userAddOptionsSchema = Joi.object({
   email: Joi.string()
