@@ -18,7 +18,7 @@ describe('users', () => {
   test('returns a Users object', () => {
     const users = new Users(client.user);
 
-    expect(users.UserModel).toBeDefined();
+    expect(users.userModel).toBeDefined();
   });
 
   test('throws if options are invalid', async () => {

@@ -37,12 +37,12 @@ const userLoginOptionsSchema = Joi.object({
 }).required();
 
 export class Users {
-  UserModel: Prisma.UserDelegate;
-  constructor(UserModel: Prisma.UserDelegate) {
-    if (!UserModel) {
+  userModel: Prisma.UserDelegate;
+  constructor(userModel: Prisma.UserDelegate) {
+    if (!userModel) {
       throw new Error('UserModel is  required');
     }
-    this.UserModel = UserModel;
+    this.userModel = userModel;
   }
 
   static async hashPassword(str: string) {
@@ -86,7 +86,7 @@ export class Users {
       options
     )) as UsersAddOption;
 
-    const user = await this.UserModel.findUnique({
+    const user = await this.userModel.findUnique({
       where: { email: params.email }
     });
 
@@ -96,7 +96,7 @@ export class Users {
 
     const hashPassword = await Users.hashPassword(params.password);
 
-    return this.UserModel.create({
+    return this.userModel.create({
       data: {
         email: params.email,
         password: hashPassword
@@ -115,7 +115,7 @@ export class Users {
       options
     )) as UsersLoginOption;
 
-    const user = await this.UserModel.findUnique({
+    const user = await this.userModel.findUnique({
       where: {
         email: params.email
       }
