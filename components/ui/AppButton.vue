@@ -3,7 +3,7 @@ const props = withDefaults(
   defineProps<{
     disabled?: boolean;
     text?: string;
-    appearance?: 'primary' | 'transparent';
+    appearance?: 'primary' | 'transparent' | 'danger';
   }>(),
   {
     appearance: 'primary',
@@ -26,6 +26,9 @@ const classes = computed(() => {
       break;
     case 'transparent':
       classesList.push('bg-transparent');
+      break;
+    case 'danger':
+      classesList.push('bg-red-500');
       break;
     default:
       classesList.push('bg-blue-500');

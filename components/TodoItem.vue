@@ -7,16 +7,24 @@ import { useTodoStore } from '~~/store/todo';
 import { Todo } from '~~/store/todo';
 import EditableText from '~/components/ui/EditableText.vue';
 import AppButton from '~/components/ui/AppButton.vue';
+import AppModal from '~/components/ui/AppModal.vue';
+import ConfirmModal from '~/components/ui/ConfirmModal.vue';
 
 const props = defineProps<{
   todo: Todo;
 }>();
 
 const textRef = ref<InstanceType<typeof EditableText>>(null);
+const isDeleteModalOpened = ref(false);
 
 const todoStore = useTodoStore();
 
-const deleteTodo = () => todoStore.remove(props.todo.id);
+const closeDeleteModal = () => (isDeleteModalOpened.value = false);
+
+const deleteTodo = () => {
+  todoStore.remove(props.todo.id);
+  closeDeleteModal();
+};
 
 const updateTodoDone = () => {
   todoStore.update(props.todo.id, { done: !props.todo.done });
@@ -82,12 +90,18 @@ const checkIconClass = computed(() =>
       <AppButton
         class="pad-0"
         appearance="transparent"
-        @click="deleteTodo"
+        @click="isDeleteModalOpened = true"
       >
         <XCircleIcon
           class="w-10 h-10 transition-all duration-200 text-red-400 cursor-pointer hover:text-red-600"
         />
       </AppButton>
     </section>
+    <ConfirmModal
+      title="Are you sure you want to delete a todo?"
+      :is-opened="isDeleteModalOpened"
+      @close="closeDeleteModal"
+      @confirm="deleteTodo"
+    />
   </div>
 </template>
