@@ -1,43 +1,19 @@
 import { defineStore } from 'pinia';
 import { v4 as uuid } from 'uuid';
-
-export interface Todo {
-  id: string;
-  title: string;
-  done: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface TodoState {
-  items: Todo[];
-}
-
-export interface TodoAdd {
-  title: string;
-}
-
-export interface TodoUpdate {
-  title?: string;
-  done?: boolean;
-}
-
-const state = (): TodoState => ({
-  items: []
-});
-
-const getters = {
-  getById: (state: TodoState) => (id: string) =>
-    state.items.find((item) => item.id === id),
-  getOrderedTodos: (state: TodoState) =>
-    [...state.items].sort(
-      (a: Todo, b: Todo) => b.createdAt.getTime() - a.createdAt.getTime()
-    )
-};
+import { Todo, TodoAdd, TodoState, TodoUpdate } from '~/types/types';
 
 export const useTodoStore = defineStore('todoStore', {
-  state,
-  getters,
+  state: (): TodoState => ({
+    items: []
+  }),
+  getters: {
+    getById: (state: TodoState) => (id: string) =>
+      state.items.find((item) => item.id === id),
+    getOrderedTodos: (state: TodoState) =>
+      [...state.items].sort(
+        (a: Todo, b: Todo) => b.createdAt.getTime() - a.createdAt.getTime()
+      )
+  },
   actions: {
     add(partialTodo: TodoAdd) {
       const todo: Todo = {
