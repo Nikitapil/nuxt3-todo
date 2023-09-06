@@ -2,6 +2,7 @@ import { tryWrap } from '~/helpers/tryWrap';
 import { users } from '~/src/controllers';
 
 export default defineEventHandler(async (event) => {
+  // TODO delete comment bellow
   // Example of redirect
   // if (event.context.user === undefined) {
   //     return sendRedirect(event, '/auth')

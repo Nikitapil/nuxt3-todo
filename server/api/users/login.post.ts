@@ -1,7 +1,8 @@
 import { users } from '~/src/controllers';
+import { tryWrap } from '~/helpers/tryWrap';
 
 export default defineEventHandler(async (event) => {
-  try {
+  const { result, error } = await tryWrap(async () => {
     const { email, password } = await readBody(event);
 
     const credentials = await users.login({ email, password });
@@ -11,9 +12,8 @@ export default defineEventHandler(async (event) => {
         Date.now() + (credentials?.expiryInDays || 0) * 24 * 60 * 60 * 1000
       )
     });
+    return 'success';
+  });
 
-    return { result: 'success', error: null };
-  } catch (e: any) {
-    return { result: null, error: e.message as string };
-  }
+  return { result, error: (error?.message as string) || null };
 });
