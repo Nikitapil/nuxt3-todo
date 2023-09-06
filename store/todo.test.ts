@@ -1,5 +1,6 @@
 import { createPinia, setActivePinia } from 'pinia';
-import { Todo, useTodoStore } from './todo';
+import { useTodoStore } from './todo';
+import { Todo } from '~/types/types';
 
 describe('todo tests', () => {
   beforeAll(() => {
