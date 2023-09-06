@@ -52,9 +52,7 @@ const register = async () => {
     return;
   }
 
-  loginMode.value = true;
-  password.value = '';
-  passwordConfirm.value = '';
+  await router.push('/');
 };
 
 const authorize = () => {

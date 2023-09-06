@@ -81,7 +81,7 @@ export class Users {
     }
   }
 
-  async add(options: UsersAddOption): Promise<Omit<User, 'password'>> {
+  async add(options: UsersAddOption): Promise<UsersToken> {
     const params = (await userAddOptionsSchema.validateAsync(
       options
     )) as UsersAddOption;
@@ -96,18 +96,14 @@ export class Users {
 
     const hashPassword = await Users.hashPassword(params.password);
 
-    return this.userModel.create({
+    const newUser = await this.userModel.create({
       data: {
         email: params.email,
         password: hashPassword
-      },
-      select: {
-        email: true,
-        id: true,
-        createdAt: true,
-        updatedAt: true
       }
     });
+
+    return Users.createToken(newUser);
   }
 
   async login(options: UsersLoginOption): Promise<UsersToken | undefined> {

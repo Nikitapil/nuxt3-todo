@@ -119,21 +119,20 @@ describe('users', () => {
     test('returns a user', async () => {
       const userController = new Users(client.user);
 
-      const user = await userController.add({
+      const token = await userController.add({
         email: 'testDb@test.test',
         password: '123456789',
         passwordConfirm: '123456789'
       });
 
-      expect(user).toStrictEqual({
-        id: expect.any(String),
-        email: 'testDb@test.test',
-        createdAt: expect.any(Date),
-        updatedAt: expect.any(Date)
+      expect(token).toStrictEqual({
+        token: expect.any(String),
+        expiryInDays: TOKEN_EXPIRY_DAYS
       });
-
       await client.user.delete({
-        where: { id: user.id }
+        where: {
+          email: 'testDb@test.test'
+        }
       });
     });
 
@@ -146,13 +145,15 @@ describe('users', () => {
         passwordConfirm: '123456789'
       };
 
-      const user = await userController.add(userMock);
+      await userController.add(userMock);
 
       // @ts-ignore
       await expect(userController.add(userMock)).rejects.toThrow();
 
       await client.user.delete({
-        where: { id: user.id }
+        where: {
+          email: 'testDb@test.test'
+        }
       });
     });
   });
