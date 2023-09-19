@@ -16,7 +16,7 @@ defineEmits<{
 <template>
   <AppModal
     :is-opened="isOpened"
-    @close="close"
+    @close="$emit('close')"
   >
     <h2 class="text-xl font-bold text-gray-600 mb-5">{{ title }}</h2>
     <div class="w-full flex justify-between gap-2">
@@ -34,5 +34,3 @@ defineEmits<{
     </div>
   </AppModal>
 </template>
-
-<style scoped></style>

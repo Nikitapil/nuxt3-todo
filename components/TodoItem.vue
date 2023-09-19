@@ -4,11 +4,10 @@ import {
   CheckCircleIcon
 } from '@heroicons/vue/24/outline/index.js';
 import { useTodoStore } from '~~/store/todo';
-import { Todo } from '~~/store/todo';
 import EditableText from '~/components/ui/EditableText.vue';
 import AppButton from '~/components/ui/AppButton.vue';
-import AppModal from '~/components/ui/AppModal.vue';
 import ConfirmModal from '~/components/ui/ConfirmModal.vue';
+import { Todo } from '~/types/types';
 
 const props = defineProps<{
   todo: Todo;
