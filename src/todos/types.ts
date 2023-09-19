@@ -10,3 +10,15 @@ export interface GetTodoListOptions {
   isDone?: boolean;
   search?: string;
 }
+
+export interface EditTodoOptions {
+  id: string;
+  ownerid: string;
+  title?: string;
+  isDone?: boolean;
+}
+
+export interface DeleteTodoOptions {
+  id: string;
+  ownerId: string;
+}

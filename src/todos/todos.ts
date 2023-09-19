@@ -1,5 +1,9 @@
 import { Prisma } from '@prisma/client';
-import { CreateTodoOptions, GetTodoListOptions } from '~/src/todos/types';
+import {
+  CreateTodoOptions, DeleteTodoOptions,
+  EditTodoOptions,
+  GetTodoListOptions
+} from '~/src/todos/types';
 import Joi from 'joi';
 
 const todoCreateOptionsSchema = Joi.object({
@@ -15,6 +19,13 @@ const getTodosListOptionsSchema = Joi.object({
   search: Joi.string()
 });
 
+const editTodoOptionsSchema = Joi.object({
+  id: Joi.string().required(),
+  ownerid: Joi.string().required(),
+  title: Joi.string().max(255),
+  isDone: Joi.boolean()
+});
+
 export class Todos {
   todoModel: Prisma.TodoDelegate;
 
@@ -26,7 +37,7 @@ export class Todos {
   }
 
   async create(todoCreateOptions: CreateTodoOptions) {
-    const params =
+    const params: CreateTodoOptions =
       await todoCreateOptionsSchema.validateAsync(todoCreateOptions);
     try {
       const newTodo = await this.todoModel.create({
@@ -40,7 +51,7 @@ export class Todos {
   }
 
   async getTodoList(getTodoListOptions: GetTodoListOptions) {
-    const params =
+    const params: GetTodoListOptions =
       await getTodosListOptionsSchema.validateAsync(getTodoListOptions);
     const { page = 1, limit = 10, isDone = null, search, ownerid } = params;
     const offset = page * limit - limit;
@@ -63,7 +74,31 @@ export class Todos {
     return todos;
   }
 
-  async editTodo() {
+  async editTodo(editTodoOptions: EditTodoOptions) {
+    const params: EditTodoOptions =
+      await editTodoOptionsSchema.validateAsync(editTodoOptions);
+    const { id, ownerid, ...todoOptions } = params;
+
+    const todo = await this.todoModel.findUnique({
+      where: {
+        id,
+        ownerid
+      }
+    });
+
+    if (!todo) {
+      throw new Error('Todo does not exist or you have no access');
+    }
+
+    const updatedTodo = await this.todoModel.update({
+      where: { id },
+      data: todoOptions
+    });
+
+    return updatedTodo;
+  }
+
+  async deleteTodo(deleteTodoOptions: DeleteTodoOptions) {
 
   }
 }
