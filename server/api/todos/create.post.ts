@@ -2,7 +2,7 @@ import { todos } from '~/src/controllers';
 import { tryWrap } from '~/helpers/tryWrap';
 
 export default defineEventHandler(async (event) => {
-  const {result, error} = await tryWrap(async () => {
+  const { result, error } = await tryWrap(async () => {
     const ownerid = event.context.user?.id;
     if (!ownerid) {
       throw new Error('Need log in first');
@@ -12,4 +12,6 @@ export default defineEventHandler(async (event) => {
     const newTodo = todos.create({ title, ownerid });
     return newTodo;
   });
+
+  return { result, error: (error?.message as string) || null };
 });

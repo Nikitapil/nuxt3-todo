@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
-import { v4 as uuid } from 'uuid';
 import { Todo, TodoAdd, TodoState, TodoUpdate } from '~/types/types';
+import { $fetch } from 'ofetch';
+import { EApiRoutes } from '~/server/api/constants';
+import { useNuxtApp } from '#app';
 
 export const useTodoStore = defineStore('todoStore', {
   state: (): TodoState => ({
@@ -15,15 +17,16 @@ export const useTodoStore = defineStore('todoStore', {
       )
   },
   actions: {
-    add(partialTodo: TodoAdd) {
-      const todo: Todo = {
-        id: uuid(),
-        done: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        ...partialTodo
-      };
-      this.items.push(todo);
+    async add(partialTodo: TodoAdd) {
+      const data = await $fetch(EApiRoutes.CREATE_TODO, {
+        method: 'POST',
+        body: partialTodo
+      });
+
+      if (data.error) {
+        const { $toast } = useNuxtApp();
+        $toast(data.error);
+      }
     },
     remove(id: string) {
       this.items = this.items.filter((item: Todo) => item.id !== id);
