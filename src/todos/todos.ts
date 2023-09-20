@@ -1,13 +1,14 @@
 import { Prisma } from '@prisma/client';
 import {
-  CreateTodoOptions, DeleteTodoOptions,
+  CreateTodoOptions,
+  DeleteTodoOptions,
   EditTodoOptions,
   GetTodoListOptions
 } from '~/src/todos/types';
 import Joi from 'joi';
 
 const todoCreateOptionsSchema = Joi.object({
-  title: Joi.string().max(255).required(),
+  title: Joi.string().max(255).min(1).required(),
   ownerid: Joi.string().required()
 });
 
@@ -22,8 +23,13 @@ const getTodosListOptionsSchema = Joi.object({
 const editTodoOptionsSchema = Joi.object({
   id: Joi.string().required(),
   ownerid: Joi.string().required(),
-  title: Joi.string().max(255),
+  title: Joi.string().max(255).min(1),
   isDone: Joi.boolean()
+});
+
+const deleteTodoOptionsSchema = Joi.object({
+  id: Joi.string().required(),
+  ownerid: Joi.string().required()
 });
 
 export class Todos {
@@ -34,6 +40,15 @@ export class Todos {
       throw new Error('TodoModel is required');
     }
     this.todoModel = todoModel;
+  }
+
+  async getTodoByTodoIdAndOwnerId(todoId: string, ownerid: string) {
+    return this.todoModel.findUnique({
+      where: {
+        id: todoId,
+        ownerid
+      }
+    });
   }
 
   async create(todoCreateOptions: CreateTodoOptions) {
@@ -79,12 +94,7 @@ export class Todos {
       await editTodoOptionsSchema.validateAsync(editTodoOptions);
     const { id, ownerid, ...todoOptions } = params;
 
-    const todo = await this.todoModel.findUnique({
-      where: {
-        id,
-        ownerid
-      }
-    });
+    const todo = await this.getTodoByTodoIdAndOwnerId(id, ownerid);
 
     if (!todo) {
       throw new Error('Todo does not exist or you have no access');
@@ -99,6 +109,18 @@ export class Todos {
   }
 
   async deleteTodo(deleteTodoOptions: DeleteTodoOptions) {
+    const params: DeleteTodoOptions =
+      await deleteTodoOptionsSchema.validateAsync(deleteTodoOptions);
+    const { id, ownerid } = params;
 
+    const todo = await this.getTodoByTodoIdAndOwnerId(id, ownerid);
+
+    if (!todo) {
+      throw new Error('Todo does not exist or you have no access');
+    }
+
+    await this.todoModel.delete({
+      where: { id }
+    });
   }
 }

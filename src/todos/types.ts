@@ -20,5 +20,5 @@ export interface EditTodoOptions {
 
 export interface DeleteTodoOptions {
   id: string;
-  ownerId: string;
+  ownerid: string;
 }
