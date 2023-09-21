@@ -42,6 +42,10 @@ watch(error, (value: boolean) => {
       :error="error"
       @save="saveNewTodo"
     ></TodoInput>
+    <TodoFilter
+      class="mb-5"
+      @change-completion="todoStore.onChangeCompletion"
+    />
     <TodoList :items="todoStore.items" />
     <Pagination
       :limit="todoStore.todoFilter.limit"

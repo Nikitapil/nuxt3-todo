@@ -28,3 +28,5 @@ export interface TodoUpdate {
   title?: string;
   done?: boolean;
 }
+
+export type TodoCompletionStatus = 'completed' | 'uncompleted' | 'all';

@@ -1,5 +1,11 @@
 import { defineStore } from 'pinia';
-import { Todo, TodoAdd, TodoState, TodoUpdate } from '~/types/types';
+import {
+  Todo,
+  TodoAdd,
+  TodoCompletionStatus,
+  TodoState,
+  TodoUpdate
+} from '~/types/types';
 import { $fetch } from 'ofetch';
 import { EApiRoutes } from '~/server/api/constants';
 import { useNuxtApp } from '#app';
@@ -38,6 +44,20 @@ export const useTodoStore = defineStore('todoStore', {
     },
     async onPaginate(page: number) {
       this.todoFilter.page = page;
+      await this.loadTodos();
+    },
+    async onChangeCompletion(completionStatus: TodoCompletionStatus) {
+      switch (completionStatus) {
+        case 'completed':
+          this.todoFilter.isDone = true;
+          break;
+        case 'uncompleted':
+          this.todoFilter.isDone = false;
+          break;
+        default:
+          this.todoFilter.isDone = undefined;
+      }
+
       await this.loadTodos();
     },
     async add(partialTodo: TodoAdd) {
