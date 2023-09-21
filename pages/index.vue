@@ -45,6 +45,7 @@ watch(error, (value: boolean) => {
     <TodoFilter
       class="mb-5"
       @change-completion="todoStore.onChangeCompletion"
+      @search="todoStore.onSearch"
     />
     <TodoList :items="todoStore.items" />
     <Pagination

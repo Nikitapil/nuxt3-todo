@@ -60,6 +60,11 @@ export const useTodoStore = defineStore('todoStore', {
 
       await this.loadTodos();
     },
+
+    async onSearch(search: string) {
+      this.todoFilter.search = search;
+      await this.loadTodos();
+    },
     async add(partialTodo: TodoAdd) {
       this.isLoading = true;
       const data = await $fetch(EApiRoutes.CREATE_TODO, {
