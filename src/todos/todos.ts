@@ -17,7 +17,7 @@ const getTodosListOptionsSchema = Joi.object({
   page: Joi.number().positive(),
   limit: Joi.number().positive(),
   isDone: Joi.boolean(),
-  search: Joi.string()
+  search: Joi.string().allow('')
 });
 
 const editTodoOptionsSchema = Joi.object({
@@ -83,10 +83,15 @@ export class Todos {
     const todos = await this.todoModel.findMany({
       where,
       skip: offset,
-      take: limit
+      take: limit,
+      orderBy: {
+        updatedAt: 'desc'
+      }
     });
 
-    return todos;
+    const totalCount = await this.todoModel.count({ where });
+
+    return { todos, totalCount };
   }
 
   async editTodo(editTodoOptions: EditTodoOptions) {

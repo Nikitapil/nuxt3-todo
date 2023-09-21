@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { useTodoStore } from '~/store/todo';
 import PageHeading from '~/components/ui/PageHeading.vue';
+import Pagination from '~/components/ui/Pagination.vue';
 
 const todoStore = useTodoStore();
 
 const newTodo = ref('');
 const error = ref(false);
+
+onMounted(async () => {
+  await todoStore.loadTodos();
+});
 
 const saveNewTodo = () => {
   if (!newTodo.value.length) {
@@ -37,6 +42,12 @@ watch(error, (value: boolean) => {
       :error="error"
       @save="saveNewTodo"
     ></TodoInput>
-    <TodoList :items="todoStore.getOrderedTodos" />
+    <TodoList :items="todoStore.items" />
+    <Pagination
+      :limit="todoStore.todoFilter.limit"
+      :current-page="todoStore.todoFilter.page"
+      :total-count="todoStore.totalCount"
+      @paginate="todoStore.onPaginate"
+    />
   </section>
 </template>

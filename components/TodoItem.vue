@@ -26,7 +26,7 @@ const deleteTodo = () => {
 };
 
 const updateTodoDone = () => {
-  todoStore.update(props.todo.id, { done: !props.todo.done });
+  todoStore.update(props.todo.id, { done: !props.todo.isDone });
 };
 
 const updateTodoTitle = (newTitle: string) => {
@@ -43,7 +43,7 @@ const parsedDate = computed(() =>
 );
 
 const checkIconClass = computed(() =>
-  props.todo.done ? 'text-green-400' : 'text-gray-400'
+  props.todo.isDone ? 'text-green-400' : 'text-gray-400'
 );
 </script>
 
@@ -61,7 +61,7 @@ const checkIconClass = computed(() =>
           @save="updateTodoTitle"
         >
           <h1
-            :class="{ 'line-through': todo.done }"
+            :class="{ 'line-through': todo.isDone }"
             class="text-2xl text-gray-700 font-light overflow-anywhere"
             :title="todo.title"
           >
