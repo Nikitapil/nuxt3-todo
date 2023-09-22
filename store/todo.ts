@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import {
-  Todo,
   TodoAdd,
   TodoCompletionStatus,
   TodoState,
@@ -75,6 +74,7 @@ export const useTodoStore = defineStore('todoStore', {
       if (data.error) {
         const { $toast } = useNuxtApp();
         $toast(data.error);
+        this.isLoading = false;
         return;
       }
       this.todoFilter = {
@@ -86,10 +86,24 @@ export const useTodoStore = defineStore('todoStore', {
       await this.loadTodos();
       this.isLoading = false;
     },
-    remove(id: string) {
-      this.items = this.items.filter((item: Todo) => item.id !== id);
+    async remove(id: string) {
+      this.isLoading = true;
+      const data = await $fetch(EApiRoutes.DELETE_TODO, {
+        method: 'DELETE',
+        body: { id }
+      });
+
+      if (data.error) {
+        const { $toast } = useNuxtApp();
+        $toast(data.error);
+        this.isLoading = false;
+        return;
+      }
+
+      await this.loadTodos()
     },
     async update(id: string, updatedTodo: TodoUpdate) {
+      this.isLoading = true;
       const data = await $fetch(EApiRoutes.EDIT_TODO, {
         method: 'PUT',
         body: { ...updatedTodo, id }
@@ -97,6 +111,7 @@ export const useTodoStore = defineStore('todoStore', {
       if (data.error) {
         const { $toast } = useNuxtApp();
         $toast(data.error);
+        this.isLoading = false;
         return;
       }
       this.items = this.items.map((todo) => {
@@ -105,6 +120,7 @@ export const useTodoStore = defineStore('todoStore', {
         }
         return todo;
       });
+      this.isLoading = false;
     }
   }
 });
