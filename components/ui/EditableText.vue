@@ -10,6 +10,7 @@ const props = defineProps<{
   text: string;
   id: string;
   name: string;
+  disabled?: boolean;
 }>();
 
 defineEmits<{
@@ -42,6 +43,7 @@ defineExpose({ close });
       v-model="textToEdit"
       class="border-2 w-full mr-1.5"
       :name="name"
+      :disabled="disabled"
       placeholder=""
       type="text"
     />
@@ -49,6 +51,7 @@ defineExpose({ close });
       v-if="!isEditMode"
       class="pad-0"
       appearance="transparent"
+      :disabled="disabled"
       @click="onOpenInput"
     >
       <PencilIcon
@@ -59,6 +62,7 @@ defineExpose({ close });
       v-else
       class="pad-0"
       appearance="transparent"
+      :disabled="disabled"
       @click="$emit('save', textToEdit)"
     >
       <DocumentCheckIcon

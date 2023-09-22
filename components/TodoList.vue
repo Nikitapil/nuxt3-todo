@@ -3,6 +3,7 @@ import { Todo } from '~/types/types';
 
 defineProps<{
   items: Todo[];
+  loading: boolean;
 }>();
 </script>
 
@@ -11,6 +12,7 @@ defineProps<{
     <TodoItem
       v-for="item in items"
       :key="item.id"
+      :loading="loading"
       :todo="item"
     />
   </section>

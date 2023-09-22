@@ -40,18 +40,24 @@ watch(error, (value: boolean) => {
     <TodoInput
       v-model="newTodo"
       :error="error"
+      :loading="todoStore.isLoading"
       @save="saveNewTodo"
-    ></TodoInput>
+    />
     <TodoFilter
       class="mb-5"
+      :loading="todoStore.isLoading"
       @change-completion="todoStore.onChangeCompletion"
       @search="todoStore.onSearch"
     />
-    <TodoList :items="todoStore.items" />
+    <TodoList
+      :items="todoStore.items"
+      :loading="todoStore.isLoading"
+    />
     <Pagination
       :limit="todoStore.todoFilter.limit"
       :current-page="todoStore.todoFilter.page"
       :total-count="todoStore.totalCount"
+      :loading="todoStore.isLoading"
       @paginate="todoStore.onPaginate"
     />
   </section>

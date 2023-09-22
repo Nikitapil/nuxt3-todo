@@ -11,6 +11,7 @@ import { Todo } from '~/types/types';
 
 const props = defineProps<{
   todo: Todo;
+  loading: boolean;
 }>();
 
 const textRef = ref<InstanceType<typeof EditableText>>(null);
@@ -58,6 +59,7 @@ const checkIconClass = computed(() =>
           ref="textRef"
           :text="todo.title"
           :name="todo.id"
+          :disabled="loading"
           @save="updateTodoTitle"
         >
           <h1
@@ -79,6 +81,7 @@ const checkIconClass = computed(() =>
       <AppButton
         class="pad-0 mr-2"
         appearance="transparent"
+        :disabled="loading"
         @click="updateTodoDone"
       >
         <check-circle-icon
@@ -89,6 +92,7 @@ const checkIconClass = computed(() =>
       <AppButton
         class="pad-0"
         appearance="transparent"
+        :disabled="loading"
         @click="isDeleteModalOpened = true"
       >
         <XCircleIcon

@@ -6,6 +6,7 @@ import AppButton from '~/components/ui/AppButton.vue';
 const props = defineProps<{
   modelValue: string;
   error: boolean;
+  loading: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -28,10 +29,12 @@ const todo = useVModel(props, 'modelValue', emit);
       type="text"
       class="border-2 w-full mr-4"
       :class="{ 'border-red-300': error, 'border-gray-300': !error }"
+      :disabled="loading"
     />
     <AppButton
       text="Save"
       class="px-5"
+      :disabled="loading"
       @click="$emit('save')"
     />
   </div>

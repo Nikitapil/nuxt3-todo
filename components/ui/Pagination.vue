@@ -5,6 +5,7 @@ const props = defineProps<{
   currentPage: number;
   totalCount: number;
   limit: number;
+  loading?: boolean;
 }>();
 
 defineEmits<{
@@ -22,7 +23,7 @@ const amountOfPages = computed(() => Math.ceil(props.totalCount / props.limit));
     <AppButton
       v-for="page in amountOfPages"
       :key="page"
-      :disabled="page === currentPage"
+      :disabled="page === currentPage || loading"
       class="px-0"
       appearance="transparent"
       @click="$emit('paginate', page)"

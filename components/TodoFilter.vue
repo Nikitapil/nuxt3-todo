@@ -5,14 +5,20 @@ import { completionOptions } from '~/constants/todo-constants';
 import AppInput from '~/components/ui/AppInput.vue';
 import AppButton from '~/components/ui/AppButton.vue';
 
+defineProps<{
+  loading: boolean;
+}>();
+
 const emit = defineEmits<{
   changeCompletion: [string];
   search: [string];
 }>();
 
 const search = ref('');
+const completion = ref('all');
 
 const onChangeCompletion = (completionStatus: string) => {
+  completion.value = completionStatus;
   emit('changeCompletion', completionStatus);
 };
 
@@ -34,7 +40,8 @@ const onSearch = () => {
         id="completion"
         class="border-2 mr-4"
         :options="completionOptions"
-        value="all"
+        :disabled="loading"
+        :value="completion"
         @change="onChangeCompletion"
       />
       <AppInput
@@ -44,10 +51,12 @@ const onSearch = () => {
         name="search"
         placeholder="Search todo..."
         type="text"
+        :disabled="loading"
       />
       <AppButton
         class="py-2"
         text="Search"
+        :disabled="loading"
         @click="onSearch"
       />
     </div>
