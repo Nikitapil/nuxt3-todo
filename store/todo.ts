@@ -100,7 +100,7 @@ export const useTodoStore = defineStore('todoStore', {
         return;
       }
 
-      await this.loadTodos()
+      await this.loadTodos();
     },
     async update(id: string, updatedTodo: TodoUpdate) {
       this.isLoading = true;
