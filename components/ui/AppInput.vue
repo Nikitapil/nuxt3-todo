@@ -7,6 +7,7 @@ const props = defineProps<{
   placeholder: string;
   type: 'text' | 'password' | 'email';
   modelValue: string;
+  disabled?: boolean;
 }>();
 const emit = defineEmits<{
   'update:modelValue': [string];
@@ -23,5 +24,6 @@ const value = useVModel(props, 'modelValue', emit);
     :placeholder="placeholder"
     :type="type"
     :name="name"
+    :disabled="disabled"
   />
 </template>

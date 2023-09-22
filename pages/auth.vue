@@ -32,7 +32,6 @@ const login = async () => {
     error.value = err;
     return;
   }
-
   await router.push('/');
 };
 
@@ -55,12 +54,15 @@ const register = async () => {
   await router.push('/');
 };
 
-const authorize = () => {
+const authorize = async () => {
+  loading.value = true;
   if (loginMode.value) {
-    login();
+    await login();
+    loading.value = false;
     return;
   }
-  register();
+  await register();
+  loading.value = false;
 };
 
 const pageTitle = computed(() =>
@@ -84,6 +86,7 @@ const authLinkText = computed(() => (loginMode.value ? 'Register' : 'Login'));
         name="email"
         placeholder="Email Address"
         type="email"
+        :disabled="loading"
       />
 
       <AppInput
@@ -92,6 +95,7 @@ const authLinkText = computed(() => (loginMode.value ? 'Register' : 'Login'));
         name="password"
         placeholder="Password"
         type="password"
+        :disabled="loading"
       />
 
       <AppInput
@@ -102,6 +106,7 @@ const authLinkText = computed(() => (loginMode.value ? 'Register' : 'Login'));
         name="password-confirm"
         placeholder="Re-enter your password"
         type="password"
+        :disabled="loading"
       />
 
       <AppButton
