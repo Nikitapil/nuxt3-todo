@@ -24,7 +24,7 @@ const editTodoOptionsSchema = Joi.object({
   id: Joi.string().required(),
   ownerid: Joi.string().required(),
   title: Joi.string().max(255).min(1),
-  isDone: Joi.boolean()
+  done: Joi.boolean()
 });
 
 const deleteTodoOptionsSchema = Joi.object({

@@ -15,7 +15,7 @@ export interface EditTodoOptions {
   id: string;
   ownerid: string;
   title?: string;
-  isDone?: boolean;
+  done?: boolean;
 }
 
 export interface DeleteTodoOptions {

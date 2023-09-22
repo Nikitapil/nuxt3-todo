@@ -89,15 +89,22 @@ export const useTodoStore = defineStore('todoStore', {
     remove(id: string) {
       this.items = this.items.filter((item: Todo) => item.id !== id);
     },
-    update(id: string, updatedTodo: TodoUpdate) {
-      const index = this.items.findIndex((item: Todo) => item.id === id);
-      if (index !== -1) {
-        this.items[index] = {
-          ...this.items[index],
-          ...updatedTodo,
-          updatedAt: new Date()
-        };
+    async update(id: string, updatedTodo: TodoUpdate) {
+      const data = await $fetch(EApiRoutes.EDIT_TODO, {
+        method: 'PUT',
+        body: { ...updatedTodo, id }
+      });
+      if (data.error) {
+        const { $toast } = useNuxtApp();
+        $toast(data.error);
+        return;
       }
+      this.items = this.items.map((todo) => {
+        if (todo.id === id) {
+          return data.result;
+        }
+        return todo;
+      });
     }
   }
 });
