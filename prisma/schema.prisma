@@ -11,13 +11,20 @@ datasource db {
 }
 
 model Todo {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   ownerid   String
-  title     String   @db.VarChar(255)
-  done      Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
-  User      User     @relation(fields: [ownerid], references: [id], onDelete: Cascade)
+  title     String    @db.VarChar(255)
+  done      Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt()
+  User      User      @relation(fields: [ownerid], references: [id], onDelete: Cascade)
+  category  String?
+  Category  Category? @relation(fields: [category], references: [name], onDelete: Cascade)
+}
+
+model Category {
+  name  String @unique
+  todos Todo[]
 }
 
 model User {
