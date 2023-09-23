@@ -1,6 +1,7 @@
 export interface CreateTodoOptions {
   ownerid: string;
   title: string;
+  category?: string;
 }
 
 export interface GetTodoListOptions {

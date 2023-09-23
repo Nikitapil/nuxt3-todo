@@ -23,15 +23,18 @@ model Todo {
 }
 
 model Category {
-  name  String @unique
-  todos Todo[]
+  name    String @unique
+  todos   Todo[]
+  ownerid String
+  User    User   @relation(fields: [ownerid], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
-  todos     Todo[]
+  id         String     @id @default(uuid())
+  email      String     @unique
+  password   String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt()
+  todos      Todo[]
+  categories Category[]
 }

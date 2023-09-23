@@ -2,19 +2,27 @@
 import { useVModel } from '@vueuse/core';
 import AppInput from '~/components/ui/AppInput.vue';
 import AppButton from '~/components/ui/AppButton.vue';
+import AppSelect from '~/components/ui/AppSelect.vue';
+import { AppSelectOptions } from '~/types/types';
 
 const props = defineProps<{
   modelValue: string;
+  categoryValue: string;
   error: boolean;
   loading: boolean;
+  categoriesOptions: AppSelectOptions[];
 }>();
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void;
+  (e: 'update:categoryValue', value: string): void;
   (e: 'save'): void;
 }>();
 
 const todo = useVModel(props, 'modelValue', emit);
+const category = useVModel(props, 'categoryValue', emit);
+
+const onChangeCategory = (cat: string) => (category.value = cat);
 </script>
 
 <template>
@@ -31,6 +39,19 @@ const todo = useVModel(props, 'modelValue', emit);
       :class="{ 'border-red-300': error, 'border-gray-300': !error }"
       :disabled="loading"
     />
+    <div class="flex items-center">
+      <AppSelect
+        id="todoCreateCategory"
+        :options="categoriesOptions"
+        :value="categoryValue"
+        @change="onChangeCategory"
+      />
+      <AppButton
+        class="text-3xl !text-black"
+        appearance="transparent"
+        text="+"
+      />
+    </div>
     <AppButton
       text="Save"
       class="px-5"

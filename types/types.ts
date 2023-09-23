@@ -18,6 +18,7 @@ export interface TodoState {
   isLoading: boolean;
   todoFilter: TodoFilter;
   totalCount: number;
+  categories: string[];
 }
 
 export interface TodoAdd {
@@ -30,3 +31,8 @@ export interface TodoUpdate {
 }
 
 export type TodoCompletionStatus = 'completed' | 'uncompleted' | 'all';
+
+export interface AppSelectOptions {
+  name: string;
+  value: string;
+}

@@ -6,10 +6,12 @@ import Pagination from '~/components/ui/Pagination.vue';
 const todoStore = useTodoStore();
 
 const newTodo = ref('');
+const newTodoCategory = ref('All');
 const error = ref(false);
 
 onMounted(async () => {
   await todoStore.loadTodos();
+  await todoStore.loadCategories();
 });
 
 const saveNewTodo = () => {
@@ -37,12 +39,16 @@ watch(error, (value: boolean) => {
     <PageHeading text="What are we doing today?" />
   </section>
   <section class="py-4 rounded-lg">
-    <TodoInput
-      v-model="newTodo"
-      :error="error"
-      :loading="todoStore.isLoading"
-      @save="saveNewTodo"
-    />
+    <div class="flex items-center w-full gap-2">
+      <TodoInput
+        v-model="newTodo"
+        v-model:category-value="newTodoCategory"
+        :error="error"
+        :loading="todoStore.isLoading"
+        :categories-options="todoStore.categoriesOptions"
+        @save="saveNewTodo"
+      />
+    </div>
     <TodoFilter
       class="mb-5"
       :loading="todoStore.isLoading"

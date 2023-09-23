@@ -9,7 +9,8 @@ import Joi from 'joi';
 
 const todoCreateOptionsSchema = Joi.object({
   title: Joi.string().max(255).min(1).required(),
-  ownerid: Joi.string().required()
+  ownerid: Joi.string().required(),
+  category: Joi.string()
 });
 
 const getTodosListOptionsSchema = Joi.object({

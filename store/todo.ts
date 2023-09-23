@@ -19,11 +19,17 @@ export const useTodoStore = defineStore('todoStore', {
       isDone: undefined,
       search: ''
     },
-    totalCount: 0
+    totalCount: 0,
+    categories: []
   }),
   getters: {
-    getById: (state: TodoState) => (id: string) =>
-      state.items.find((item) => item.id === id)
+    categoriesOptions: (state) => [
+      { name: 'All', value: 'All' },
+      ...state.categories.map((category) => ({
+        name: category,
+        value: category
+      }))
+    ]
   },
   actions: {
     async loadTodos() {
@@ -40,6 +46,15 @@ export const useTodoStore = defineStore('todoStore', {
       this.items = data.result?.todos;
       this.totalCount = data.result?.totalCount;
       this.isLoading = false;
+    },
+    async loadCategories() {
+      const data = await $fetch(EApiRoutes.GET_CATEGORIES);
+      if (data.error) {
+        const { $toast } = useNuxtApp();
+        $toast(data.error);
+        return;
+      }
+      this.categories = data.result;
     },
     async onPaginate(page: number) {
       this.todoFilter.page = page;

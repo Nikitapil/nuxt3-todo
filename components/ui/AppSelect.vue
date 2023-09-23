@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { AppSelectOptions } from '~/types/types';
+
 defineProps<{
-  options: { name: string; value: string }[];
+  options: AppSelectOptions[];
   value: string;
   id: string;
   disabled?: boolean;
