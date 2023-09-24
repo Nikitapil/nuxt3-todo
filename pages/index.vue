@@ -21,7 +21,11 @@ const saveNewTodo = () => {
     return;
   }
 
-  todoStore.add({ title: newTodo.value, category: newTodoCategory.value });
+  todoStore.add({
+    title: newTodo.value,
+    category:
+      newTodoCategory.value === 'All' ? undefined : newTodoCategory.value
+  });
 
   newTodo.value = '';
 };
@@ -30,10 +34,10 @@ const onCloseCreateCategoryModal = () =>
   (isOpenCreateCategoryModal.value = false);
 
 const onCreateCategory = async (name: string) => {
-  const isCreated = await todoStore.createCategory(name);
-  if (isCreated) {
+  const createdId = await todoStore.createCategory(name);
+  if (createdId) {
     onCloseCreateCategoryModal();
-    newTodoCategory.value = name;
+    newTodoCategory.value = createdId;
   }
 };
 

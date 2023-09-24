@@ -87,7 +87,8 @@ export class Todos {
       take: limit,
       orderBy: {
         updatedAt: 'desc'
-      }
+      },
+      include: { Category: true }
     });
 
     const totalCount = await this.todoModel.count({ where });

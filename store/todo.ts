@@ -26,8 +26,8 @@ export const useTodoStore = defineStore('todoStore', {
     categoriesOptions: (state) => [
       { name: 'All', value: 'All' },
       ...state.categories.map((category) => ({
-        name: category,
-        value: category
+        name: category.name,
+        value: category.id
       }))
     ]
   },
@@ -148,11 +148,11 @@ export const useTodoStore = defineStore('todoStore', {
         const { $toast } = useNuxtApp();
         $toast(data.error);
         this.isLoading = false;
-        return false;
+        return null;
       }
 
       await this.loadCategories();
-      return true;
+      return data.result?.id;
     }
   }
 });

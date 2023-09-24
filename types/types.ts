@@ -3,6 +3,7 @@ export interface Todo {
   title: string;
   done: boolean;
   category: string | null;
+  Category: Category;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -14,17 +15,22 @@ export interface TodoFilter {
   search: string;
 }
 
+export interface Category {
+  id: string;
+  name: string;
+}
+
 export interface TodoState {
   items: Todo[];
   isLoading: boolean;
   todoFilter: TodoFilter;
   totalCount: number;
-  categories: string[];
+  categories: Category[];
 }
 
 export interface TodoAdd {
   title: string;
-  category: string;
+  category?: string;
 }
 
 export interface TodoUpdate {

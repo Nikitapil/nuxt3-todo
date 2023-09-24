@@ -77,8 +77,10 @@ const checkIconClass = computed(() =>
             {{ parsedDate }}
           </small>
         </p>
-        <p v-if="todo.category">
-          <small class="text-gray-400"> Category: {{ todo.category }} </small>
+        <p v-if="todo.Category">
+          <small class="text-gray-400">
+            Category: {{ todo.Category.name }}
+          </small>
         </p>
       </div>
     </div>

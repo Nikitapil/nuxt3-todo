@@ -19,14 +19,17 @@ model Todo {
   updatedAt DateTime  @updatedAt()
   User      User      @relation(fields: [ownerid], references: [id], onDelete: Cascade)
   category  String?
-  Category  Category? @relation(fields: [category], references: [name], onDelete: Cascade)
+  Category  Category? @relation(fields: [category], references: [id], onDelete: Cascade)
 }
 
 model Category {
-  name    String @unique
+  id      String @id @default(uuid())
+  name    String
   todos   Todo[]
   ownerid String
   User    User   @relation(fields: [ownerid], references: [id], onDelete: Cascade)
+
+  @@unique(fields: [name, ownerid], name: "unique")
 }
 
 model User {

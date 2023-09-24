@@ -20,7 +20,7 @@ export class Categories {
   async createCategory(createOptions: CreateCategoryOptions) {
     const params = await createOptionsSchema.validateAsync(createOptions);
     const candidate = await this.categoryModel.findUnique({
-      where: { name: createOptions.name }
+      where: { unique: { name: params.name, ownerid: params.ownerid } }
     });
 
     if (candidate) {
@@ -39,6 +39,6 @@ export class Categories {
       where: { ownerid }
     });
 
-    return categories.map((cat) => cat.name);
+    return categories;
   }
 }
