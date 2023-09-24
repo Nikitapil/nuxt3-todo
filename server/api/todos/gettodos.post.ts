@@ -7,14 +7,15 @@ export default defineEventHandler(async (event) => {
     if (!ownerid) {
       throw new Error('Need log in first');
     }
-    const { page, limit, isDone, search } = await readBody(event);
+    const { page, limit, isDone, search, category } = await readBody(event);
 
     const todoList = await todos.getTodoList({
       page,
       limit,
       isDone,
       search,
-      ownerid
+      ownerid,
+      category
     });
     return todoList;
   });

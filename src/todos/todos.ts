@@ -18,7 +18,8 @@ const getTodosListOptionsSchema = Joi.object({
   page: Joi.number().positive(),
   limit: Joi.number().positive(),
   isDone: Joi.boolean(),
-  search: Joi.string().allow('')
+  search: Joi.string().allow(''),
+  category: Joi.string()
 });
 
 const editTodoOptionsSchema = Joi.object({
@@ -69,7 +70,14 @@ export class Todos {
   async getTodoList(getTodoListOptions: GetTodoListOptions) {
     const params: GetTodoListOptions =
       await getTodosListOptionsSchema.validateAsync(getTodoListOptions);
-    const { page = 1, limit = 10, isDone = null, search, ownerid } = params;
+    const {
+      page = 1,
+      limit = 10,
+      isDone = null,
+      search,
+      ownerid,
+      category
+    } = params;
     const offset = page * limit - limit;
     const where: Prisma.TodoWhereInput = {
       ownerid,
@@ -80,6 +88,10 @@ export class Todos {
     };
     if (isDone !== null) {
       where.done = isDone;
+    }
+
+    if (category) {
+      where.category = category;
     }
     const todos = await this.todoModel.findMany({
       where,

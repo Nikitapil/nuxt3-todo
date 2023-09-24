@@ -13,6 +13,7 @@ export interface TodoFilter {
   limit: number;
   isDone?: boolean;
   search: string;
+  category?: string;
 }
 
 export interface Category {

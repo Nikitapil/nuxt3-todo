@@ -4,22 +4,31 @@ import AppSelect from '~/components/ui/AppSelect.vue';
 import { completionOptions } from '~/constants/todo-constants';
 import AppInput from '~/components/ui/AppInput.vue';
 import AppButton from '~/components/ui/AppButton.vue';
+import { AppSelectOptions } from '~/types/types';
 
 defineProps<{
   loading: boolean;
+  categoryOptions: AppSelectOptions[];
 }>();
 
 const emit = defineEmits<{
   changeCompletion: [string];
+  changeCategory: [string];
   search: [string];
 }>();
 
 const search = ref('');
 const completion = ref('all');
+const category = ref('All');
 
 const onChangeCompletion = (completionStatus: string) => {
   completion.value = completionStatus;
   emit('changeCompletion', completionStatus);
+};
+
+const onChangeCategory = (cat: string) => {
+  category.value = cat;
+  emit('changeCategory', cat);
 };
 
 const onSearch = () => {
@@ -43,6 +52,20 @@ const onSearch = () => {
         :disabled="loading"
         :value="completion"
         @change="onChangeCompletion"
+      />
+      <label
+        class="mr-1"
+        for="category_filter"
+      >
+        Category:
+      </label>
+      <AppSelect
+        id="category_filter"
+        class="border-2 mr-4"
+        :options="categoryOptions"
+        :disabled="loading"
+        :value="category"
+        @change="onChangeCategory"
       />
       <AppInput
         id="search"

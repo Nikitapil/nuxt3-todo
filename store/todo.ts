@@ -17,7 +17,8 @@ export const useTodoStore = defineStore('todoStore', {
       page: 1,
       limit: 10,
       isDone: undefined,
-      search: ''
+      search: '',
+      category: undefined
     },
     totalCount: 0,
     categories: []
@@ -72,6 +73,11 @@ export const useTodoStore = defineStore('todoStore', {
           this.todoFilter.isDone = undefined;
       }
 
+      await this.loadTodos();
+    },
+
+    async onChangeCategory(category: string) {
+      this.todoFilter.category = category === 'All' ? undefined : category;
       await this.loadTodos();
     },
 

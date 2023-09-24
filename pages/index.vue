@@ -69,7 +69,9 @@ watch(error, (value: boolean) => {
     <TodoFilter
       class="mb-5"
       :loading="todoStore.isLoading"
+      :category-options="todoStore.categoriesOptions"
       @change-completion="todoStore.onChangeCompletion"
+      @change-category="todoStore.onChangeCategory"
       @search="todoStore.onSearch"
     />
     <TodoList

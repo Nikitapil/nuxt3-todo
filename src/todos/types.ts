@@ -10,6 +10,7 @@ export interface GetTodoListOptions {
   limit?: number;
   isDone?: boolean;
   search?: string;
+  category?: string;
 }
 
 export interface EditTodoOptions {
