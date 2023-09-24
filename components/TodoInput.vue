@@ -17,6 +17,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void;
   (e: 'update:categoryValue', value: string): void;
   (e: 'save'): void;
+  (e: 'open-create-category-modal'): void;
 }>();
 
 const todo = useVModel(props, 'modelValue', emit);
@@ -47,9 +48,10 @@ const onChangeCategory = (cat: string) => (category.value = cat);
         @change="onChangeCategory"
       />
       <AppButton
-        class="text-3xl !text-black"
+        class="text-3xl !text-black hover:opacity-50"
         appearance="transparent"
         text="+"
+        @click="$emit('open-create-category-modal')"
       />
     </div>
     <AppButton

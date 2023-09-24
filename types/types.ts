@@ -2,6 +2,7 @@ export interface Todo {
   id: string;
   title: string;
   done: boolean;
+  category: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,6 +24,7 @@ export interface TodoState {
 
 export interface TodoAdd {
   title: string;
+  category: string;
 }
 
 export interface TodoUpdate {

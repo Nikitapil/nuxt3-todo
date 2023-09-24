@@ -39,6 +39,6 @@ export class Categories {
       where: { ownerid }
     });
 
-    return categories;
+    return categories.map((cat) => cat.name);
   }
 }

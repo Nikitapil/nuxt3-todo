@@ -8,6 +8,7 @@ const todoStore = useTodoStore();
 const newTodo = ref('');
 const newTodoCategory = ref('All');
 const error = ref(false);
+const isOpenCreateCategoryModal = ref(false);
 
 onMounted(async () => {
   await todoStore.loadTodos();
@@ -20,9 +21,20 @@ const saveNewTodo = () => {
     return;
   }
 
-  todoStore.add({ title: newTodo.value });
+  todoStore.add({ title: newTodo.value, category: newTodoCategory.value });
 
   newTodo.value = '';
+};
+
+const onCloseCreateCategoryModal = () =>
+  (isOpenCreateCategoryModal.value = false);
+
+const onCreateCategory = async (name: string) => {
+  const isCreated = await todoStore.createCategory(name);
+  if (isCreated) {
+    onCloseCreateCategoryModal();
+    newTodoCategory.value = name;
+  }
 };
 
 watch(error, (value: boolean) => {
@@ -46,6 +58,7 @@ watch(error, (value: boolean) => {
         :error="error"
         :loading="todoStore.isLoading"
         :categories-options="todoStore.categoriesOptions"
+        @open-create-category-modal="isOpenCreateCategoryModal = true"
         @save="saveNewTodo"
       />
     </div>
@@ -67,4 +80,9 @@ watch(error, (value: boolean) => {
       @paginate="todoStore.onPaginate"
     />
   </section>
+  <CreateTodoCategoryModal
+    :is-opened="isOpenCreateCategoryModal"
+    @close="onCloseCreateCategoryModal"
+    @create="onCreateCategory"
+  />
 </template>

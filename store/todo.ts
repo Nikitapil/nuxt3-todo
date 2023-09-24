@@ -136,6 +136,23 @@ export const useTodoStore = defineStore('todoStore', {
         return todo;
       });
       this.isLoading = false;
+    },
+
+    async createCategory(name: string) {
+      const data = await $fetch(EApiRoutes.CREATE_CATEGORY, {
+        method: 'POST',
+        body: { name }
+      });
+
+      if (data.error) {
+        const { $toast } = useNuxtApp();
+        $toast(data.error);
+        this.isLoading = false;
+        return false;
+      }
+
+      await this.loadCategories();
+      return true;
     }
   }
 });

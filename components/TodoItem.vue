@@ -71,11 +71,16 @@ const checkIconClass = computed(() =>
           </h1>
         </EditableText>
       </div>
-      <p>
-        <small class="text-gray-400">
-          {{ parsedDate }}
-        </small>
-      </p>
+      <div class="flex flex-wrap gap-2">
+        <p>
+          <small class="text-gray-400">
+            {{ parsedDate }}
+          </small>
+        </p>
+        <p v-if="todo.category">
+          <small class="text-gray-400"> Category: {{ todo.category }} </small>
+        </p>
+      </div>
     </div>
     <section class="flex items-center">
       <AppButton

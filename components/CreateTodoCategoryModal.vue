@@ -22,11 +22,15 @@ const onCreate = () => {
 </script>
 
 <template>
-  <AppModal :is-opened="isOpened">
+  <AppModal
+    :is-opened="isOpened"
+    @close="$emit('close')"
+  >
     <h3>Create new category</h3>
     <AppInput
       id="newCategory"
       v-model="newCategory"
+      class="border-2 w-full my-4 min-w-[320px]"
       name="newCategory"
       placeholder="New category..."
       type="text"
