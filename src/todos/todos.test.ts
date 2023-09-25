@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Todo } from '@prisma/client';
 import { Todos } from './todos';
 import { beforeAll } from 'vitest';
 import { Users } from '../users/users';
@@ -86,6 +86,13 @@ describe('todos tests', () => {
         // @ts-ignore
         todoController.create({ title: '1234', ownerid: id, category: 123 })
       ).rejects.toThrow('"category" must be a string');
+    });
+
+    test('should throw from catch block if category does not exist', async () => {
+      await expect(
+        // @ts-ignore
+        todoController.create({ title: '1234', ownerid: id, category: '123' })
+      ).rejects.toThrow('Error while creating todo');
     });
 
     test('should create and return todo', async () => {
@@ -264,6 +271,226 @@ describe('todos tests', () => {
       await client.todo.delete({
         where: { id: todo.id }
       });
+    });
+
+    test('should return todos with category filter', async () => {
+      const category = await client.category.create({
+        data: {
+          name: 'test-category',
+          ownerid: id
+        }
+      });
+      const todo = await todoController.create({
+        title: 'test todo',
+        ownerid: id,
+        category: category.id
+      });
+
+      const todo2 = await todoController.create({
+        title: 'test todo',
+        ownerid: id
+      });
+
+      const todos = await todoController.getTodoList({
+        ownerid: id,
+        limit: 10,
+        page: 1,
+        category: category.id
+      });
+
+      expect(todos).toStrictEqual({
+        todos: [
+          {
+            ...todo,
+            Category: {
+              id: category.id,
+              name: 'test-category',
+              ownerid: id
+            }
+          }
+        ],
+        totalCount: 1
+      });
+
+      await client.todo.delete({
+        where: { id: todo.id }
+      });
+
+      await client.todo.delete({
+        where: { id: todo2.id }
+      });
+
+      await client.category.delete({
+        where: { id: category.id }
+      });
+    });
+  });
+
+  describe('editTodo tests', () => {
+    const todoController = new Todos(client.todo);
+    let todo: Todo;
+
+    beforeAll(async () => {
+      todo = await todoController.create({
+        title: 'test todo',
+        ownerid: id
+      });
+    });
+
+    afterAll(async () => {
+      await client.todo.delete({
+        where: { id: todo.id }
+      });
+    });
+
+    test('should throw if no todo id', async () => {
+      // @ts-ignore
+      await expect(todoController.editTodo({})).rejects.toThrow(
+        '"id" is required'
+      );
+    });
+
+    test('should throw if todo id is not string', async () => {
+      // @ts-ignore
+      await expect(todoController.editTodo({ id: 123 })).rejects.toThrow(
+        '"id" must be a string'
+      );
+    });
+
+    test('should throw if no ownerid', async () => {
+      // @ts-ignore
+      await expect(todoController.editTodo({ id: todo.id })).rejects.toThrow(
+        '"ownerid" is required'
+      );
+    });
+
+    test('should throw if ownerid is not a string', async () => {
+      await expect(
+        // @ts-ignore
+        todoController.editTodo({ id: todo.id, ownerid: 123 })
+      ).rejects.toThrow('"ownerid" must be a string');
+    });
+
+    test('should throw if title is empty', async () => {
+      await expect(
+        todoController.editTodo({ id: todo.id, ownerid: id, title: '' })
+      ).rejects.toThrow('"title" is not allowed to be empty');
+    });
+
+    test('should throw if title is bigger than 255 characters', async () => {
+      const title = '1'.repeat(256);
+      await expect(
+        todoController.editTodo({ id: todo.id, ownerid: id, title })
+      ).rejects.toThrow(
+        '"title" length must be less than or equal to 255 characters long'
+      );
+    });
+
+    test('should throw if title is not a string', async () => {
+      await expect(
+        //@ts-ignore
+        todoController.editTodo({ id: todo.id, ownerid: id, title: 123 })
+      ).rejects.toThrow('"title" must be a string');
+    });
+
+    test('should throw if done is not a boolean', async () => {
+      await expect(
+        //@ts-ignore
+        todoController.editTodo({ id: todo.id, ownerid: id, done: 123 })
+      ).rejects.toThrow('"done" must be a boolean');
+    });
+
+    test('should edit todo title successfully', async () => {
+      const updatedTodo = await todoController.editTodo({
+        id: todo.id,
+        ownerid: id,
+        title: 'updated title'
+      });
+
+      expect(updatedTodo.title).toBe('updated title');
+    });
+
+    test('should edit todo done state successfully', async () => {
+      const updatedTodo = await todoController.editTodo({
+        id: todo.id,
+        ownerid: id,
+        done: true
+      });
+
+      expect(updatedTodo.done).toBe(true);
+    });
+
+    test('should throw if no todo found', async () => {
+      await expect(
+        todoController.editTodo({
+          id: 'todo.id',
+          ownerid: id,
+          done: true
+        })
+      ).rejects.toThrow('Todo does not exist or you have no access');
+    });
+  });
+
+  describe('delete todo tests', () => {
+    const todoController = new Todos(client.todo);
+    let todo: Todo;
+
+    beforeAll(async () => {
+      todo = await todoController.create({
+        title: 'test todo',
+        ownerid: id
+      });
+    });
+
+    afterAll(async () => {
+      await client.todo.deleteMany({
+        where: { ownerid: id }
+      });
+    });
+
+    test('it should throw if no todo id', async () => {
+      // @ts-ignore
+      await expect(todoController.deleteTodo({})).rejects.toThrow(
+        '"id" is required'
+      );
+    });
+
+    test('it should throw if todo id is not a string', async () => {
+      // @ts-ignore
+      await expect(todoController.deleteTodo({ id: 123 })).rejects.toThrow(
+        '"id" must be a string'
+      );
+    });
+
+    test('it should throw if no owner id', async () => {
+      // @ts-ignore
+      await expect(todoController.deleteTodo({ id: todo.id })).rejects.toThrow(
+        '"ownerid" is required'
+      );
+    });
+
+    test('it should throw if owner id is not a string', async () => {
+      await expect(
+        // @ts-ignore
+        todoController.deleteTodo({ id: todo.id, ownerid: 123 })
+      ).rejects.toThrow('"ownerid" must be a string');
+    });
+
+    test('it should delete todo successfully', async () => {
+      await todoController.deleteTodo({ id: todo.id, ownerid: id });
+      const todos = await todoController.getTodoList({
+        ownerid: id,
+        limit: 10,
+        page: 1
+      });
+
+      expect(todos.totalCount).toBe(0);
+    });
+
+    test('it should throw if no todo', async () => {
+      await expect(
+        todoController.deleteTodo({ id: 'todo.id', ownerid: id })
+      ).rejects.toThrow('Todo does not exist or you have no access');
     });
   });
 });
